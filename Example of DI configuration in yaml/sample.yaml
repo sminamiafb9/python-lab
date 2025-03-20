@@ -1,0 +1,16 @@
+modules:
+- sample
+- pandas
+cls: App
+args:
+  a: 0
+  b:
+    cls: B
+    args:
+        c:
+            cls: C
+  df:
+    cls: DataFrame
+    args:
+        data: [[1, 2], [3, 4], [5, 6]]
+entry_point: run
