@@ -1,0 +1,10 @@
+module: sample
+cls: App
+entry_point: run
+args:
+  a: 10
+  b:
+    c: {}
+  df:
+    c1: [1, 2, 3]
+    c2: [4, 5, 6]
