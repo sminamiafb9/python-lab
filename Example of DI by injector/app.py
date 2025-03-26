@@ -20,6 +20,11 @@ class QualifiedName:
             cls, method = cls.split(".")
         return QualifiedName(module=module, cls=cls, method=method)
 
+@dataclass
+class Binding:
+    interface: str
+    to: str
+    args: dict[str, Any]
 
 def load_class(module_name: str, cls_name: str) -> type[Any]:
     module = importlib.import_module(module_name)
@@ -32,7 +37,7 @@ def create_instance(cls: type[Any], args: dict[str, Any]) -> Any:
     return cast(cls, OmegaConf.to_object(merged))  # type: ignore
 
 class Binder(Module):
-    def __init__(self, bindings: list[dict[str, Any]]):
+    def __init__(self, bindings: list[Binding]):
         self.bindings = bindings
 
     def configure(self, binder):
@@ -40,9 +45,9 @@ class Binder(Module):
             interface, instance = self._resolve_binding(binding)
             binder.bind(interface, instance, scope=singleton)
     
-    def _resolve_binding(self, binding: dict[str, Any]) -> tuple[type[Any], type[Any]]:
-        interface = self._load_class(binding["interface"])
-        implementation = self._create_instance(binding["to"], binding["args"])
+    def _resolve_binding(self, binding: Binding) -> tuple[type[Any], type[Any]]:
+        interface = self._load_class(binding.interface)
+        implementation = self._create_instance(binding.to, binding.args)
         return interface, implementation
 
     def _load_class(self, fqcn: str) -> type[Any]:
@@ -56,7 +61,7 @@ class Binder(Module):
 @dataclass
 class AppRunner:
     main: str
-    bindings: list[dict[str, Any]]
+    bindings: list[Binding]  # Use the new Binding dataclass
 
     def run(self):
         injector = Injector([Binder(self.bindings)])
