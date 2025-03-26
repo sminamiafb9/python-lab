@@ -1,0 +1,12 @@
+main: sample:App.run
+binds:
+- interface: sample:Configuration
+  to: sample:Configuration
+  args:
+    a: 10
+    df:
+      c1: [1, 2, 3]
+      c2: [4, 5, 6]
+- interface: sample:IC
+  to: sample:C
+  args: {}
