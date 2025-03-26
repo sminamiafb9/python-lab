@@ -1,5 +1,5 @@
 main: sample:App.run
-binds:
+bindings:
 - interface: sample:Configuration
   to: sample:Configuration
   args:
